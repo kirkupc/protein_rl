@@ -1,0 +1,89 @@
+# Evaluation thresholds — mirroring Latent-X paper protocol
+# Adjust per-target as needed based on sensitivity analysis
+
+defaults:
+  iptm_min: 0.55          # iPTM threshold — primary metric
+  plddt_min: 70.0         # average pLDDT over binder chain
+  interface_rmsd_max: 2.0 # Angstroms — agreement with re-predicted pose
+  pae_max: 10.0           # predicted aligned error (inter-chain)
+
+# Per-target overrides (tune after sensitivity analysis in Phase 4)
+targets:
+  IL7RA:
+    pdb_id: "3DI2"
+    chain_id: "A"
+    iptm_min: 0.55
+    plddt_min: 70.0
+    interface_rmsd_max: 2.0
+    hotspot_cutoff_angstrom: 8.0
+    notes: "Key cytokine receptor; interface involves extracellular domain"
+
+  TrkA:
+    pdb_id: "2IFG"
+    chain_id: "A"
+    iptm_min: 0.55
+    plddt_min: 70.0
+    interface_rmsd_max: 2.0
+    hotspot_cutoff_angstrom: 8.0
+    notes: "Neurotrophin receptor; kinase domain"
+
+  InsulinR:
+    pdb_id: "7PG0"
+    chain_id: "A"
+    iptm_min: 0.60
+    plddt_min: 72.0
+    interface_rmsd_max: 1.8
+    hotspot_cutoff_angstrom: 8.0
+    notes: "Insulin receptor; challenging due to conformational flexibility"
+
+  EGFR:
+    pdb_id: "3NJP"
+    chain_id: "A"
+    iptm_min: 0.55
+    plddt_min: 70.0
+    interface_rmsd_max: 2.0
+    hotspot_cutoff_angstrom: 8.0
+    notes: "Epidermal growth factor receptor; well-studied benchmark"
+
+  FGFR2:
+    pdb_id: "1DJS"
+    chain_id: "A"
+    iptm_min: 0.55
+    plddt_min: 70.0
+    interface_rmsd_max: 2.0
+    hotspot_cutoff_angstrom: 8.0
+    notes: "Fibroblast growth factor receptor 2"
+
+# Generation parameters
+generation:
+  rfdiffusion:
+    num_designs: 50         # backbones per target
+    diffusion_steps: 50
+    noise_scale: 1.0
+    binder_length_min: 50
+    binder_length_max: 100
+
+  proteinmpnn:
+    sequences_per_backbone: 8
+    temperature: 0.1        # default; RL will optimise this
+    num_seq_per_target: 1
+
+# RL / Bayesian optimisation parameters
+rl:
+  approach: "bayesian"     # "reinforce" | "bayesian"
+  n_iterations: 20
+  batch_size: 16
+
+  reinforce:
+    learning_rate: 1.0e-4
+    baseline: "running_mean"
+    reward_scaling: true
+    reward_clip: 3.0       # clip rewards to ±3 std
+
+  bayesian:
+    param_space:
+      temperature: [0.05, 1.5]
+      diffusion_steps: [25, 200]
+      noise_scale: [0.5, 2.0]
+    acquisition: "ei"      # expected improvement
+    n_initial_points: 5

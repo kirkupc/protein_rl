@@ -1,0 +1,37 @@
+# Scientific stack
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.12
+scipy>=1.11
+
+# Structural biology
+biopython==1.84
+py3Dmol>=2.0
+
+# ML
+torch>=2.0
+torchvision
+transformers>=4.35
+
+# Bioinformatics
+biotite>=0.38
+mdanalysis>=2.6
+
+# Structure prediction (open-source)
+# chai_lab  # install separately: pip install chai_lab
+
+# Optimisation & RL
+scikit-learn>=1.3
+gpytorch>=1.11        # Gaussian Process for Bayesian optimisation
+
+# Notebook / viz
+jupyterlab>=4.0
+ipywidgets>=8.0
+plotly>=5.17
+kaleido>=0.2          # static image export for plotly
+
+# Utilities
+tqdm>=4.65
+pyyaml>=6.0
+requests>=2.31
